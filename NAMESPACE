@@ -2,8 +2,11 @@
 
 export(annoInfo)
 export(enrichAll)
+export(mergeFasta)
 export(plotVolcano)
 export(processLFQ)
+export(proteinDegree)
+export(splitFasta)
 importFrom(ggplot2,aes)
 importFrom(ggplot2,element_rect)
 importFrom(ggplot2,element_text)

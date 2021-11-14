@@ -11,6 +11,7 @@ enrichAll <- function(poi, u, Org){
                                   universe = u,
                                   OrgDb = switch(Org,
                                                  "mouse" = org.Mm.eg.db::org.Mm.eg.db,
+                                                 "human" = org.Hs.eg.db::org.Hs.eg.db,
                                                  {
                                                    stop("Organism must be mouse or human")
                                                  }),
@@ -26,6 +27,7 @@ enrichAll <- function(poi, u, Org){
                                   universe = u,
                                   OrgDb = switch(Org,
                                                  "mouse" = org.Mm.eg.db::org.Mm.eg.db,
+                                                 "human" = org.Hs.eg.db::org.Hs.eg.db,
                                                  {
                                                    stop("Organism must be mouse or human")
                                                  }),
@@ -40,6 +42,7 @@ enrichAll <- function(poi, u, Org){
                                   universe = u,
                                   OrgDb = switch(Org,
                                                  "mouse" = org.Mm.eg.db::org.Mm.eg.db,
+                                                 "human" = org.Hs.eg.db::org.Hs.eg.db,
                                                  {
                                                    stop("Organism must be mouse or human")
                                                  }),
@@ -55,6 +58,7 @@ enrichAll <- function(poi, u, Org){
                              fromType = "UNIPROT", toType="ENTREZID",
                              OrgDb = switch(Org,
                                             "mouse" = "org.Mm.eg.db",
+                                            "human" = "org.Hs.eg.db",
                                             {
                                               stop("Organism must be mouse or human")
                                             }))
@@ -63,6 +67,7 @@ enrichAll <- function(poi, u, Org){
                              fromType = "UNIPROT", toType="ENTREZID",
                              OrgDb = switch(Org,
                                             "mouse" = "org.Mm.eg.db",
+                                            "human" = "org.Hs.eg.db",
                                             {
                                               stop("Organism must be mouse or human")
                                             }))

@@ -15,12 +15,16 @@ Imports:
     dplyr,
     ggplot2,
     magrittr,
+    org.Hs.eg.db,
     org.Mm.eg.db,
     purrr,
     ReactomePA,
+    readr,
     rlang,
     stats,
+    STRINGdb,
     stringr,
-    tidyr
+    tidyr,
+    utils
 Depends: 
     R (>= 2.10)
