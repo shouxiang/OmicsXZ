@@ -4,12 +4,14 @@
 \alias{plotVolcano}
 \title{Volcano plots}
 \usage{
-plotVolcano(df, fcTH = 1.5)
+plotVolcano(df, fcTH = 1.5, fdr = 0.05)
 }
 \arguments{
 \item{df}{data.frame}
 
 \item{fcTH}{double}
+
+\item{fdr}{double}
 }
 \value{
 ggplot2.object

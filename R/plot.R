@@ -2,11 +2,12 @@
 #'
 #' @param df data.frame
 #' @param fcTH double
+#' @param fdr double
 #' @return ggplot2.object
 #' @importFrom ggplot2 ggplot geom_point geom_segment aes element_rect element_text margin theme theme_classic unit xlab ylab
 #' @export
 
-plotVolcano <- function(df, fcTH = 1.5){
+plotVolcano <- function(df, fcTH = 1.5, fdr = 0.05){
 
   #data must contain required columns
   stopifnot("Input data does not contain correct column names" =
@@ -22,7 +23,7 @@ plotVolcano <- function(df, fcTH = 1.5){
   xMax <- max(df$log2fc) + 1
   yMax <- max(-log10(df$pvalue)) + 1
   pvalueTH <- max((df %>%
-    dplyr::filter(.data$p.adjust < 0.05))$pvalue)
+    dplyr::filter(.data$p.adjust < fdr))$pvalue)
 
   hit <- df %>%
     dplyr::filter(.data$log2fc >= log2(fcTH) &
