@@ -48,6 +48,12 @@ annoInfo <- function(anno, df, ref) {
              label = paste0(round(foldEnrichment, digits = 2), ", ", sig))
 }
 
+#' Extract cellular localization information
+#'
+#' @param df data.frame
+#'
+#' @return data.frame
+#' @export
 celLoc <- function(df) {
 
   stopifnot("Input data does not contain correct column names" =
@@ -72,7 +78,12 @@ celLoc <- function(df) {
     dplyr::rename(proteinID = .data$Entry)
 }
 
-# Cys functional annotations
+#' Extract cysteine functional annotations
+#'
+#' @param df data.frame
+#'
+#' @return data.frame
+#' @export
 cysFun <- function(df){
 
   stopifnot("Input data does not contain Cys functional annotations" =
@@ -101,14 +112,14 @@ isNucleophileCys <- function(annotation, aa){
 
   result <- FALSE
   str <- stringr::str_extract_all(annotation,
-                                  "ACT_SITE \\d*;  /note=\"Nucleophile\"")
+                                  "ACT_SITE \\d*; /note=\"Nucleophile\"")
   str[lengths(str) == 0] <- NA
 
   for(i in 1:length(str[[1]])){
 
     if(!is.na(str[[1]][i])){
       cysSite <- stringr::str_remove_all(str[[1]][i],
-                                         "(ACT_SITE |;  /note=\"Nucleophile\")") %>%
+                                         "(ACT_SITE |; /note=\"Nucleophile\")") %>%
         as.integer()
       if(substr(aa, cysSite, cysSite) == "C"){
         result <- TRUE

@@ -44,7 +44,7 @@ splitFasta <- function(inputFasta = file.choose(), x) {
 #'
 #' @return NULL
 #' @export
-mergeFasta <- function(inputDir = utils::choose.dir()) {
+mergeFasta <- function(inputDir) {
 
   file_name <- list.files(path = inputDir, pattern = '^\\d+.result$')
 

@@ -1,67 +1,61 @@
-#' Process proteomics data, two experimental conditions
+#' 2 experimental conditions
 #'
 #' @param df data.frame
 #' @param h0 string
 #' @param h1 string
-#' @param replicate int
-#' @return data.frame
+#' @param seperator string
 #'
+#' @return data.frame
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 
-processLFQ <- function(df, h0, h1, replicate = 3) {
+process2groups <- function(df, h0, h1, seperator = "-1") {
 
-  stopifnot("Iput experimental conditions are wrong" =
-              paste0("LFQ.intensity.", rep(c(h0, h1), each = replicate), 1:replicate)
-            %in% colnames(df) &
-              h0 != h1)
+  df1 <- processLFQ(df, seperator)
 
-  col <- col_OI(df, "^LFQ.intensity.")
+  df_P_fc <- df1 %>%
+    split(~proteinID) %>%
+    purrr::map(get_P_foldChange, h0, h1) %>%
+    purrr::reduce(rbind)
 
-  df1 <- preprocess(df, col)
-
-  # imputation
+  #new column name for imputed value
   df2 <- df1 %>%
-    longer(col)
+    wider("imputed")
+  columnNames <- getSignalColumnName(df2, "^LFQ.intensity.")
+  colnames(df2) <-
+    ifelse(colnames(df2) %in% columnNames,
+           paste0("impute_", colnames(df2)),
+           colnames(df1))
 
-  LOD <- min(df2$intensity, na.rm = TRUE) - 2
+  df3 <- df1 %>%
+    wider("raw")
 
-  df2 <- df2 %>%
-    split(~id) %>%
-    purrr::map(impute2, LOD) %>%
-    purrr::reduce(rbind) %>%
-    wider()
+  df_all <-
+    dplyr::left_join(df3,df2,by = "proteinID") %>%
+    dplyr::left_join(df_P_fc, by = "proteinID")
 
-  colnames(df2) <- ifelse(colnames(df2) %in% col,
-                          paste0("impute_", colnames(df2)),
-                          colnames(df2))
-
-  # calculate pvalue and fold change
-
-  col <- col_OI(df2, "^impute_LFQ.intensity.")
-
-  df3 <- df2 %>%
-    longer(col) %>%
-    split(~id) %>%
-    purrr::map(pFC, h0, h1) %>%
-    purrr::reduce(rbind) %>%
-    dplyr::left_join(df1, by = "id") %>%
-    dplyr::left_join(df2 %>%
-                       dplyr::select(-.data$proteinID, -.data$geneName), by = "id") %>%
-    dplyr::mutate(p.adjust = stats::p.adjust(.data$pvalue, method = "BH"))
-
-  df3
+  df_all
 }
 
-preprocess <- function(df, col) {
+processLFQ <- function(df, seperator) {
 
-  df %>%
-    clean() %>%
-    log2Signal(col) %>%
-    longer(col) %>%
-    #select intensity detected in all triplicates in
-    #at least one experimental group
+  columnNames <- getSignalColumnName(df, "^LFQ.intensity.")
+
+  df_log2 <- df %>%
+    clean(columnNames) %>%
+    longer(columnNames, seperator) %>%
+    log2Signal()
+
+  df_valid <- df_log2 %>%
     selectValid() %>%
-    wider()
+    dplyr::left_join(df_log2, by = "proteinID")
+
+  df_imputed <- df_valid %>%
+    split(~experiment) %>%
+    purrr::map(impute) %>%
+    purrr::reduce(rbind)
+
+  df_imputed
 }
+

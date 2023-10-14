@@ -4,7 +4,7 @@
 \alias{mergeFasta}
 \title{Merge and summarize IUPred results}
 \usage{
-mergeFasta(inputDir = utils::choose.dir())
+mergeFasta(inputDir)
 }
 \arguments{
 \item{inputDir}{path}
